@@ -1,8 +1,8 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <time.h>
-#define M 5
-#define N 5
+#define M 7
+#define N 7
 #define MINE -1
 int MapOfMines[M][N];
 int Status[M][N];
