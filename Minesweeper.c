@@ -1,18 +1,21 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <time.h>
+
 #define M 5
 #define N 5
 #define MINE -1
+
 int MapOfMines[M][N];
 int Status[M][N];
+
 void Init();
 void PrintMap1();
 void PrintMap2();
 void CountMines();
 void Open_cell_1(int r, int c);
 int Count_remain();
-void openALl();
+void openAll();
 
 int main()
 {
@@ -25,14 +28,11 @@ int main()
     while(1)
     {
         PrintMap2();
-        do {
-            printf("Choose your cell(Row-> Column): ");
+        printf("Choose your cell(Row-> Column): ");
             scanf("%d%d", &r, &c);
-        }
-        while(r>M || r<0 || c>N || c<0);
         if(MapOfMines[r][c] == MINE)
         {
-            openALl();
+            openAll();
             PrintMap2();
             printf("\n#---------- GAME OVER ----------#\n");
             break;
@@ -120,26 +120,18 @@ void CountMines()
     {
         for(j=0;j<N;j++)
         {
-            if(MapOfMines[i][j]!=MINE)
+            if(MapOfMines[i][j]==MINE)
             {
-                int cnt=0;
-                if(i-1>=0 && j-1>=0 && MapOfMines[i-1][j-1] == MINE)
-                    cnt++;
-                if(i-1>=0  && MapOfMines[i-1][j] == MINE)
-                    cnt++;
-                if(i-1>=0 && j+1<N && MapOfMines[i-1][j+1] == MINE)
-                    cnt++;
-                if( j-1>=0 && MapOfMines[i][j-1] == MINE)
-                    cnt++;
-                if(j+1<N && MapOfMines[i][j+1] == MINE)
-                    cnt++;
-                if(i+1<M && j-1>=0 && MapOfMines[i+1][j-1] == MINE)
-                    cnt++;
-                if(i+1<M && MapOfMines[i+1][j] == MINE)
-                    cnt++;
-                if(i+1<M && j+1<N && MapOfMines[i+1][j+1] == MINE)
-                    cnt++;
-                MapOfMines[i][j]=cnt;
+                
+                if(Inside_MapOfMines_Check(i-1,j-1)) MapOfMines[i-1][j-1]++;
+                if(Inside_MapOfMines_Check(i-1,j)) MapOfMines[i-1][j]++;
+                if(Inside_MapOfMines_Check(i-1,j+1)) MapOfMines[i-1][j+1]++;
+                if(Inside_MapOfMines_Check(i,j-1)) MapOfMines[i][j-1]++;
+                if(Inside_MapOfMines_Check(i,j+1)) MapOfMines[i][j+1]++;
+                if(Inside_MapOfMines_Check(i+1,j-1)) MapOfMines[i+1][j-1]++;
+                if(Inside_MapOfMines_Check(i+1,j)) MapOfMines[i+1][j]++;
+                if(Inside_MapOfMines_Check(i+1,j+1)) MapOfMines[i+1][j+1]++;
+                
             }
         }
     }
@@ -151,7 +143,7 @@ void Open_cell_1(int r, int c)
         Status[r][c] = 1;
 }
 
-void openALl()
+void openAll()
 {
     int i,j;
     for(i=0;i<M;i++)
@@ -176,4 +168,9 @@ int Count_remain()
         }
     }
     return cnt;
+}
+
+int Inside_MapOfMines_Check(int i,int j){
+    if((0<=i && i<=M)&&(0<=j&&j<=N)) return 1;
+    return 0;
 }
