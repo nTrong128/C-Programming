@@ -2,49 +2,77 @@
 #include <stdlib.h>
 #include <time.h>
 #include <conio.h>
-#define M 7
-#define N 7
 #define MINE -1
-int Map[M][N];
-int Status[M][N];
-void PrintMap(); // In bang do boom //
-void CountMines(); // Kiem tra so luong boom xung quanh //
-void Open_cell(int r, int c); // Mo o duoc chon va xung quanh //
-int Count_remain(); // Kiem tra so o khong chua boom con lai //
-void openAll(); // Mo tat ca o //
-int Open_check(int r, int c); // Kiem tra trang thai o //
-void Init_mines(int k); // Tao boom //
+
+void PrintMap(int Rmax, int Cmax, int M[][Cmax], int S[][Cmax]);     // Print map //
+
+void CountMines(int Rmax, int Cmax, int M[][Cmax]);                  // Check around //
+
+void Open_cell(int Rmax, int Cmax, int r, int c, int M[][Cmax], int S[][Cmax]);          // Open cell //
+
+int Count_remain(int Rmax, int Cmax,int S[][Cmax]);                // Check the empty cells //
+
+void openAll(int Rmax, int Cmax, int S[][Cmax]);                    // Open all cells //
+
+int Open_check(int Cmax, int r, int c, int S[][Cmax]);                        // Check cell's status //
+
+void Init_mines(int Rmax, int Cmax, int k, int M[][Cmax], int S[][Cmax]);          // Create mines //
 
 int main()
 {
-    int k = 9; //  So luong boom //
-    Init_mines(k);
+    int Rmax,Cmax,k;
+    int Mod;
+    printf("Game Mode\n1. Easy(Type 1)\n2. Medium(Type 2)\n3. Hardcore(Type 3)\n");
+    scanf("%d",&Mod);
+    switch (Mod)
+    {
+    case 1:
+        Rmax=9;
+        Cmax=9;
+        k=10;
+        break;
+    
+    case 2:
+        Rmax=15;
+        Cmax=15;
+        k=15;
+        break;
+
+    case 3:
+        Rmax=25;
+        Cmax=25;
+        k=90;
+        break;
+    }
+    int M[Rmax][Cmax];
+    int S[Rmax][Cmax];
     int r,c;
-    CountMines();
+    Init_mines(Rmax, Cmax, k, M, S);
+    CountMines(Rmax, Cmax, M);
     while(1)
     {
-        PrintMap();
+        PrintMap(Rmax, Cmax, M, S);
         do {
             do {
                 fflush(stdin);
                 printf("Choose your cell(Row-> Column): ");
                 scanf("%d%d", &r, &c);
             }
-            while(Open_check(r,c)==1);
+            while(Open_check(Cmax, r, c, S)==1);
         }
-        while(r>M-1 || r<0 || c>N-1 || c<0);
+        while(r>Rmax-1 || r<0 || c>Cmax-1 || c<0);
 
-        if(Map[r][c] == MINE) {
-            openAll();
-            PrintMap();
+        if(M[r][c] == MINE) {
+            openAll(Rmax, Cmax, S);
+            PrintMap(Rmax, Cmax, M, S);
             printf("\n#---------- GAME OVER ----------#\n");
             break;
         }
-        Open_cell(r,c);
-        if(Count_remain() == k)
+        Open_cell(Rmax, Cmax, r, c, M, S);
+        if(Count_remain(Rmax, Cmax, S) == k)
         {
-            openAll();
-            PrintMap();
+            openAll(Rmax, Cmax, S);
+            PrintMap(Rmax, Cmax, M, S);
             printf("\n#---------- Congratulations ----------#\n    #---------- YOU WIN ----------#\n");
             break;
         }
@@ -53,145 +81,141 @@ int main()
     return 0;
 }
 
-void PrintMap()
+void PrintMap(int Rmax, int Cmax, int M[][Cmax], int S[][Cmax])
 {
     int i,j;
     printf("  ");
-    for(j=0;j<N;j++)
-        printf(" %2d ",j);
+    for(j=0;j<Cmax;j++)
+        printf("%2d ",j);
     printf("\n");
-    for(i=0;i<M;i++)
+    for(i=0;i<Rmax;i++)
     {
-        printf("  +---+---+---+---+---+---+---+\n");
-        printf("%d |",i);
-        for(j=0;j<N;j++)
+        printf("%2d ",i);
+        for(j=0;j<Cmax;j++)
         {
-            if(Map[i][j] ==MINE && Status[i][j] ==1)
-                printf(" x |");
-            else if(Map[i][j] !=0 && Status[i][j] ==1)
-                printf("%2d |", Map[i][j]);
-            else if(Status[i][j] == 0)
-                printf(" # |");
-            else if(Map[i][j] == 0)
-                printf(" . |");
-            else printf("%2d ", Map[i][j]);
+            if(S[i][j]==0) printf(" # ");
+            else if(S[i][j]==1 && M[i][j]==0) printf(" . ");
+            else if(S[i][j]==1 && M[i][j]!=MINE) printf(" %d ",M[i][j]);
+            else if(S[i][j]==1 && M[i][j]==MINE) printf(" x ");
         }
 
         printf("\n");
     }
-    printf("  +---+---+---+---+---+---+---+\n");
 }
 
-void CountMines()
+void CountMines(int Rmax, int Cmax,int M[][Cmax])
 {
     int i,j;
 
-    for(i=0;i<M;i++)
+    for(i=0;i<Rmax;i++)
     {
-        for(j=0;j<N;j++)
+        for(j=0;j<Cmax;j++)
         {
-            if(Map[i][j]!=MINE)
+            if(M[i][j]!=MINE)
             {
                 int cnt=0;
-                if(i-1>=0 && j-1>=0 && Map[i-1][j-1] == MINE)
+                if(i-1>=0 && j-1>=0 && M[i-1][j-1] == MINE)
                     cnt++;
-                if(i-1>=0  && Map[i-1][j] == MINE)
+                if(i-1>=0  && M[i-1][j] == MINE)
                     cnt++;
-                if(i-1>=0 && j+1<N && Map[i-1][j+1] == MINE)
+                if(i-1>=0 && j+1<Cmax && M[i-1][j+1] == MINE)
                     cnt++;
-                if( j-1>=0 && Map[i][j-1] == MINE)
+                if( j-1>=0 && M[i][j-1] == MINE)
                     cnt++;
-                if(j+1<N && Map[i][j+1] == MINE)
+                if(j+1<Cmax && M[i][j+1] == MINE)
                     cnt++;
-                if(i+1<M && j-1>=0 && Map[i+1][j-1] == MINE)
+                if(i+1<Rmax && j-1>=0 && M[i+1][j-1] == MINE)
                     cnt++;
-                if(i+1<M && Map[i+1][j] == MINE)
+                if(i+1<Cmax && M[i+1][j] == MINE)
                     cnt++;
-                if(i+1<M && j+1<N && Map[i+1][j+1] == MINE)
+                if(i+1<Cmax && j+1<Rmax && M[i+1][j+1] == MINE)
                     cnt++;
-                Map[i][j]=cnt;
+                M[i][j]=cnt;
             }
         }
     }
 }
 
-void openAll()
+void openAll(int Rmax, int Cmax, int S[][Cmax])
 {
     int i,j;
-    for(i=0;i<M;i++)
+    for(i=0;i<Rmax;i++)
     {
-        for(j=0;j<N;j++)
+        for(j=0;j<Cmax;j++)
         {
-            Status[i][j] = 1;
+            S[i][j] = 1;
         }
     }
 }
 
-int Count_remain()
+int Count_remain(int Rmax, int Cmax, int S[][Cmax])
 {
     int cnt = 0;
     int i,j;
-    for(i=0;i<M;i++)
+    for(i=0;i<Rmax;i++)
     {
-        for(j=0;j<N;j++)
+        for(j=0;j<Cmax;j++)
         {
-            if(Status[i][j] == 0)
+            if(S[i][j] == 0)
                 cnt++;
         }
     }
     return cnt;
 }
-int Open_check(int r, int c)
+
+int Open_check(int Cmax, int r, int c, int S[][Cmax])
 {
-    if(Status[r][c] == 1)
+    if(S[r][c] == 1)
         return 1;
     else return 0;
 }
 
-void Open_cell(int r, int c) {
-    if(r<0 || r>=M || c<0 || c>=N)
+void Open_cell(int Rmax, int Cmax, int r, int c, int M[][Cmax], int S[][Cmax]) 
+{
+    if(r<0 || r>=Rmax || c<0 || c>=Cmax)
         return;
-    if(Status[r][c] == 1)
+    if(S[r][c] == 1)
         return;
-    Status[r][c] = 1;
-    if(Map[r][c] > 0)
+    S[r][c] = 1;
+    if(M[r][c] > 0)
     {
-        Status[r][c] = 1;
+        S[r][c] = 1;
         return;
     }
-    else if(Map[r][c] == 0)
+    else if(M[r][c] == 0)
     {
-        Open_cell(r-1,c-1);
-        Open_cell(r-1,c);
-        Open_cell(r-1,c+1);
-        Open_cell(r,c-1);
-        Open_cell(r,c+1);
-        Open_cell(r+1,c-1);
-        Open_cell(r+1,c);
-        Open_cell(r+1,c+1);
+        Open_cell(Rmax, Cmax,r-1, c-1, M, S);
+        Open_cell(Rmax, Cmax,r-1, c, M, S);
+        Open_cell(Rmax, Cmax, r-1, c+1, M, S);
+        Open_cell(Rmax, Cmax, r, c-1, M, S);
+        Open_cell(Rmax, Cmax, r, c+1, M, S);
+        Open_cell(Rmax, Cmax, r+1, c-1, M, S);
+        Open_cell(Rmax, Cmax, r+1, c, M, S);
+        Open_cell(Rmax, Cmax, r+1, c+1, M, S);
     }
 
 }
 
-void Init_mines(int k)
+void Init_mines(int Rmax, int Cmax, int k, int M[][Cmax], int S[][Cmax])
 {
     srand(time(0));
     int i,j;
-    for(i=0;i<M;i++)
+    for(i=0;i<Rmax;i++)
     {
-        for(j=0;j<N;j++)
+        for(j=0;j<Cmax;j++)
         {
-            Map[i][j]=0;
+            M[i][j]=0;
+            S[i][j]=0;
         }
     }
     int cnt=0;
     for(i=0;i<k;i++)
     {
-        int r= rand()%M;
-        int c =rand()%N;
-        if(Map[r][c] == 0)
+        int r= rand()%Rmax;
+        int c =rand()%Cmax;
+        if(M[r][c] == 0)
         {
-            Map[r][c] = MINE;
+            M[r][c] = MINE;
             cnt++;
         }
     }
