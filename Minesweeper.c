@@ -87,28 +87,12 @@ void CountMines()
     {
         for(j=0;j<N;j++)
         {
-            if(MapOfMines[i][j]!=MINE)
+            if(MapOfMines[i][j]==MINE)
             {
-                int cnt=0;
-                if(i-1>=0 && j-1>=0 && MapOfMines[i-1][j-1] == MINE)
-                    cnt++;
-                if(i-1>=0  && MapOfMines[i-1][j] == MINE)
-                    cnt++;
-                if(i-1>=0 && j+1<N && MapOfMines[i-1][j+1] == MINE)
-                    cnt++;
-                if( j-1>=0 && MapOfMines[i][j-1] == MINE)
-                    cnt++;
-                if(j+1<N && MapOfMines[i][j+1] == MINE)
-                    cnt++;
-                if(i+1<M && j-1>=0 && MapOfMines[i+1][j-1] == MINE)
-                    cnt++;
-                if(i+1<M && MapOfMines[i+1][j] == MINE)
-                    cnt++;
-                if(i+1<M && j+1<N && MapOfMines[i+1][j+1] == MINE)
-                    cnt++;
-                MapOfMines[i][j]=cnt;
+                Place_Numbers(i,j);
             }
         }
+                
     }
 }
 
@@ -193,4 +177,20 @@ void Init_mines(int k)
         }
     }
     return;
+}
+
+int Inside_MapOfMines_Check(int i,int j){
+    if((0<=i && i<=M)&&(0<=j&&j<=N)) return 1;
+    return 0;
+}
+
+void Place_Numbers(int i, int j){
+    for(int iter1=i-1;iter1<=i+1;++iter1){
+        for(int iter2=j-1;iter2<=j+1;++iter2){
+            if(iter1==i&&iter2==j) continue;
+                else if(Inside_MapOfMines_Check(iter1,iter2)){
+                    MapOfMines[iter1][iter2]++;
+            }
+        }
+    }
 }
