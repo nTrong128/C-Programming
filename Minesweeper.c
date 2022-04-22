@@ -52,6 +52,28 @@ int main()
     getch();
     return 0;
 }
+void print_outline(){  //in từng dòng lưới ngang
+	printf("  +");
+	for(int i=0;i<M;++i){
+		printf("---+");
+	}
+	printf("\n");
+}
+
+char tile_check(int i, int j){  //trả về kí tự tương ứng với từng ô
+    if(Map[i][j] ==MINE && Status[i][j] ==1) return 'x';
+    if(Map[i][j] !=0 && Status[i][j] ==1) return Map[i][j]+48; //trong mã ascii thì 0 bắt đầu từ 48
+    if(Status[i][j] == 0) return '#';
+    if(Map[i][j] == 0) return '.';
+    return Map[i][j]+48;
+}
+
+void print_row(int i){
+    printf("%d-|",i);
+        for(int j=0;j<N;j++)
+        {
+                printf(" %c |",tile_check(i,j));
+} 
 
 void PrintMap()
 {
@@ -62,24 +84,11 @@ void PrintMap()
     printf("\n");
     for(i=0;i<M;i++)
     {
-        printf("  +---+---+---+---+---+---+---+\n");
-        printf("%d |",i);
-        for(j=0;j<N;j++)
-        {
-            if(Map[i][j] ==MINE && Status[i][j] ==1)
-                printf(" x |");
-            else if(Map[i][j] !=0 && Status[i][j] ==1)
-                printf("%2d |", Map[i][j]);
-            else if(Status[i][j] == 0)
-                printf(" # |");
-            else if(Map[i][j] == 0)
-                printf(" . |");
-            else printf("%2d ", Map[i][j]);
-        }
-
+        print_outline();
+        print_row(i);
         printf("\n");
     }
-    printf("  +---+---+---+---+---+---+---+\n");
+    print_outline();
 }
 
 void CountMines()
