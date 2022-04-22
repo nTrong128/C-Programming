@@ -73,6 +73,7 @@ void print_row(int i){
         for(int j=0;j<N;j++)
         {
                 printf(" %c |",tile_check(i,j));
+        }
 } 
 
 void PrintMap()
