@@ -1,0 +1,14 @@
+# ninja log v5
+2	121	6723337382047432	CMakeFiles/C_Programming.dir/Minesweeper.c.obj	ef258cafad1a3d20
+121	241	6723337383155848	C_Programming.exe	dcdfea884e9c4312
+1	27	0	clean	73bb7818eed9f3d4
+1	121	6723337475147763	CMakeFiles/C_Programming.dir/Minesweeper.c.obj	ef258cafad1a3d20
+122	247	6723337476313504	C_Programming.exe	dcdfea884e9c4312
+2	253	6723341404597149	CMakeFiles/C_Programming.dir/Minesweeper.c.obj	ef258cafad1a3d20
+256	470	6723341406653229	C_Programming.exe	dcdfea884e9c4312
+2	153	6723341583929360	CMakeFiles/C_Programming.dir/Minesweeper.c.obj	ef258cafad1a3d20
+154	307	6723341585375880	C_Programming.exe	dcdfea884e9c4312
+2	116	6723341681880603	CMakeFiles/C_Programming.dir/Minesweeper.c.obj	ef258cafad1a3d20
+118	236	6723341683014486	C_Programming.exe	dcdfea884e9c4312
+2	116	6723341734577411	CMakeFiles/C_Programming.dir/Minesweeper.c.obj	ef258cafad1a3d20
+117	233	6723341735684785	C_Programming.exe	dcdfea884e9c4312
