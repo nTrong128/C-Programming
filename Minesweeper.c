@@ -1,11 +1,10 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <time.h>
-#include <conio.h>
 #define M 7
 #define N 7
 #define MINE -1
-int Map[M][N];
+int MapOfMines[M][N];
 int Status[M][N];
 void PrintMap(); // In bang do boom //
 void CountMines(); // Kiem tra so luong boom xung quanh //
@@ -17,7 +16,7 @@ void Init_mines(int k); // Tao boom //
 
 int main()
 {
-    int k = 9; //  So luong boom //
+    int k = 3; //  So luong boom //
     Init_mines(k);
     int r,c;
     CountMines();
@@ -29,12 +28,12 @@ int main()
                 fflush(stdin);
                 printf("Choose your cell(Row-> Column): ");
                 scanf("%d%d", &r, &c);
-            }
+                }
             while(Open_check(r,c)==1);
         }
         while(r>M-1 || r<0 || c>N-1 || c<0);
 
-        if(Map[r][c] == MINE) {
+        if(MapOfMines[r][c] == MINE) {
             openAll();
             PrintMap();
             printf("\n#---------- GAME OVER ----------#\n");
@@ -45,11 +44,10 @@ int main()
         {
             openAll();
             PrintMap();
-            printf("\n#---------- Congratulations ----------#\n    #---------- YOU WIN ----------#\n");
+            printf("\n#---------- Congratulations ----------#\n#---------- YOU WIN ----------#\n");
             break;
         }
     }
-    getch();
     return 0;
 }
 
@@ -57,29 +55,28 @@ void PrintMap()
 {
     int i,j;
     printf("  ");
-    for(j=0;j<N;j++)
-        printf(" %2d ",j);
+    for(j=0;j<M;j++)
+            printf("%2d ",j);
     printf("\n");
     for(i=0;i<M;i++)
     {
-        printf("  +---+---+---+---+---+---+---+\n");
-        printf("%d |",i);
+        printf("%d ",i);
         for(j=0;j<N;j++)
         {
-            if(Map[i][j] ==MINE && Status[i][j] ==1)
-                printf(" x |");
-            else if(Map[i][j] !=0 && Status[i][j] ==1)
-                printf("%2d |", Map[i][j]);
+            if(MapOfMines[i][j] ==MINE && Status[i][j] ==1)
+                printf(" x ");
+            else if(MapOfMines[i][j] !=0 && Status[i][j] ==1)
+                printf("%2d ", MapOfMines[i][j]);
             else if(Status[i][j] == 0)
-                printf(" # |");
-            else if(Map[i][j] == 0)
-                printf(" . |");
-            else printf("%2d ", Map[i][j]);
+                printf(" # ");
+            else if(MapOfMines[i][j] == MINE)
+                printf(" x ");
+            else if(MapOfMines[i][j] == 0)
+                printf(" . ");
+            else printf("%2d ", MapOfMines[i][j]);
         }
-
         printf("\n");
     }
-    printf("  +---+---+---+---+---+---+---+\n");
 }
 
 void CountMines()
@@ -90,28 +87,12 @@ void CountMines()
     {
         for(j=0;j<N;j++)
         {
-            if(Map[i][j]!=MINE)
+            if(MapOfMines[i][j]==MINE)
             {
-                int cnt=0;
-                if(i-1>=0 && j-1>=0 && Map[i-1][j-1] == MINE)
-                    cnt++;
-                if(i-1>=0  && Map[i-1][j] == MINE)
-                    cnt++;
-                if(i-1>=0 && j+1<N && Map[i-1][j+1] == MINE)
-                    cnt++;
-                if( j-1>=0 && Map[i][j-1] == MINE)
-                    cnt++;
-                if(j+1<N && Map[i][j+1] == MINE)
-                    cnt++;
-                if(i+1<M && j-1>=0 && Map[i+1][j-1] == MINE)
-                    cnt++;
-                if(i+1<M && Map[i+1][j] == MINE)
-                    cnt++;
-                if(i+1<M && j+1<N && Map[i+1][j+1] == MINE)
-                    cnt++;
-                Map[i][j]=cnt;
+                Place_Numbers(i,j);
             }
         }
+                
     }
 }
 
@@ -144,32 +125,32 @@ int Count_remain()
 int Open_check(int r, int c)
 {
     if(Status[r][c] == 1)
-        return 1;
+       return 1;
     else return 0;
 }
 
 void Open_cell(int r, int c) {
-    if(r<0 || r>=M || c<0 || c>=N)
-        return;
-    if(Status[r][c] == 1)
-        return;
+     if(r<0 || r>=M || c<0 || c>=N)
+         return;
+     if(Status[r][c] == 1)
+         return;
     Status[r][c] = 1;
-    if(Map[r][c] > 0)
-    {
-        Status[r][c] = 1;
-        return;
-    }
-    else if(Map[r][c] == 0)
-    {
-        Open_cell(r-1,c-1);
-        Open_cell(r-1,c);
-        Open_cell(r-1,c+1);
-        Open_cell(r,c-1);
-        Open_cell(r,c+1);
-        Open_cell(r+1,c-1);
-        Open_cell(r+1,c);
-        Open_cell(r+1,c+1);
-    }
+     if(MapOfMines[r][c] > 0)
+     {
+         Status[r][c] = 1;
+         return;
+     }
+     else if(MapOfMines[r][c] == 0)
+     {
+         Open_cell(r-1,c-1);
+         Open_cell(r-1,c);
+         Open_cell(r-1,c+1);
+         Open_cell(r,c-1);
+         Open_cell(r,c+1);
+         Open_cell(r+1,c-1);
+         Open_cell(r+1,c);
+         Open_cell(r+1,c+1);
+     }
 
 }
 
@@ -181,7 +162,7 @@ void Init_mines(int k)
     {
         for(j=0;j<N;j++)
         {
-            Map[i][j]=0;
+            MapOfMines[i][j]=0;
         }
     }
     int cnt=0;
@@ -189,11 +170,27 @@ void Init_mines(int k)
     {
         int r= rand()%M;
         int c =rand()%N;
-        if(Map[r][c] == 0)
+        if(MapOfMines[r][c] == 0)
         {
-            Map[r][c] = MINE;
+            MapOfMines[r][c] = MINE;
             cnt++;
         }
     }
     return;
+}
+
+int Inside_MapOfMines_Check(int i,int j){
+    if((0<=i && i<=M)&&(0<=j&&j<=N)) return 1;
+    return 0;
+}
+
+void Place_Numbers(int i, int j){
+    for(int iter1=i-1;iter1<=i+1;++iter1){
+        for(int iter2=j-1;iter2<=j+1;++iter2){
+            if(iter1==i&&iter2==j) continue;
+                else if(Inside_MapOfMines_Check(iter1,iter2)){
+                    MapOfMines[iter1][iter2]++;
+            }
+        }
+    }
 }

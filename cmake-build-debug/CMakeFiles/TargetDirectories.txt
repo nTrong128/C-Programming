@@ -1,3 +1,0 @@
-C:/Users/Trong/OneDrive - ctu.edu.vn/Documents/GitHub/C-Programming/cmake-build-debug/CMakeFiles/C_Programming.dir
-C:/Users/Trong/OneDrive - ctu.edu.vn/Documents/GitHub/C-Programming/cmake-build-debug/CMakeFiles/edit_cache.dir
-C:/Users/Trong/OneDrive - ctu.edu.vn/Documents/GitHub/C-Programming/cmake-build-debug/CMakeFiles/rebuild_cache.dir
