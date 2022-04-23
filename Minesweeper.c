@@ -40,8 +40,8 @@ int main()
 
     case 3:
         Rmax=25;
-        Cmax=25;
-        k=90;
+        Cmax=15;
+        k=75;
         break;
     }
     int M[Rmax][Cmax];
@@ -65,7 +65,7 @@ int main()
         if(M[r][c] == MINE) {
             openAll(Rmax, Cmax, S);
             PrintMap(Rmax, Cmax, M, S);
-            printf("\n#---------- GAME OVER ----------#\n");
+            printf("\n#---------- YOU FK NOOBBBBBBBBBBBB ----------#\n      #---------- GAME OVER ----------#\n");
             break;
         }
         Open_cell(Rmax, Cmax, r, c, M, S);
@@ -84,7 +84,7 @@ int main()
 void PrintMap(int Rmax, int Cmax, int M[][Cmax], int S[][Cmax])
 {
     int i,j;
-    printf("  ");
+    printf("   ");
     for(j=0;j<Cmax;j++)
         printf("%2d ",j);
     printf("\n");
