@@ -4,5 +4,5 @@ Progress:<br />
 ✔ Improving numbering tiles algorithm.<br />
 ✔ Grid outline.<br />
 ✔️ Difficulties choosing.<br />
-▢ Graphics UI.<br />
+~~ ~~▢ Graphics UI.	~~<br />
 ...<br />
